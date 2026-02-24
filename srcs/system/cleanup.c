@@ -25,4 +25,8 @@ void	cleanup_game(t_game *game)
 		mlx_destroy_display(game->mlx);
 	free(game->mlx);
 	free_map(game->map.grid);
+	free(game->map.tex_no);
+	free(game->map.tex_so);
+	free(game->map.tex_we);
+	free(game->map.tex_ea);
 }

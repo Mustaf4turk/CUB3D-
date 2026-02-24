@@ -28,6 +28,15 @@ typedef struct s_map
 	char	**grid;
 	int		width;
 	int		height;
+	char	*tex_no;
+	char	*tex_so;
+	char	*tex_we;
+	char	*tex_ea;
+	int		floor_rgb[3];
+	int		ceiling_rgb[3];
+	double	spawn_x;
+	double	spawn_y;
+	char	spawn_dir;
 }t_map;
 
 typedef struct s_game

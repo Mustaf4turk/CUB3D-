@@ -62,11 +62,12 @@ make
 - Window + image rendering loop
 - Basic WASD movement and arrow rotation
 - Basic DDA raycasting with flat wall colors
-- Very small parser stub (checks map path is readable, then loads an internal demo map)
+- Real `.cub` parser for `NO/SO/WE/EA/F/C` + map section
+- Map validation: one player spawn, allowed chars, map closure check
 
 ## Next mandatory steps
 
-1. Replace parser stub with real `.cub` parsing (`NO/SO/WE/EA/F/C` + map)
-2. Add map validation (closed map, one spawn, valid chars)
-3. Add texture loading and textured wall rendering
-4. Add strict error handling + full free on all failure paths
+1. Add texture file validation (`.xpm` exists and readable)
+2. Add textured wall rendering using parsed `NO/SO/WE/EA` paths
+3. Tighten error handling + full free on all failure paths
+4. Add more valid/invalid map test cases
