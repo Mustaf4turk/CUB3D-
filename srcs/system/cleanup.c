@@ -1,0 +1,28 @@
+#include "cub3d.h"
+
+static void	free_map(char **grid)
+{
+	int	i;
+
+	if (!grid)
+		return ;
+	i = 0;
+	while (grid[i])
+	{
+		free(grid[i]);
+		i++;
+	}
+	free(grid);
+}
+
+void	cleanup_game(t_game *game)
+{
+	if (game->img.ptr)
+		mlx_destroy_image(game->mlx, game->img.ptr);
+	if (game->win)
+		mlx_destroy_window(game->mlx, game->win);
+	if (game->mlx)
+		mlx_destroy_display(game->mlx);
+	free(game->mlx);
+	free_map(game->map.grid);
+}
