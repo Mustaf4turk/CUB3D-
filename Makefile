@@ -5,16 +5,21 @@ CFLAGS = -Wall -Wextra -Werror -O2
 
 UNAME_S := $(shell uname -s)
 
+ifeq ($(UNAME_S), Linux)
 MINILIBX_DIR = lib/mlx_linux
-MINILIBX = $(MINILIBX_DIR)/libmlx.a
+MINILIBX     = $(MINILIBX_DIR)/libmlx.a
+MLX_FLAGS    = -L$(MINILIBX_DIR) -lmlx -lXext -lX11 -lm -lbsd
+MLX_REPO     = https://github.com/42Paris/minilibx-linux.git
+else ifeq ($(UNAME_S), Darwin)
+MINILIBX_DIR = lib/mlx_macos
+MINILIBX     = $(MINILIBX_DIR)/libmlx.a
+MLX_FLAGS    = -L$(MINILIBX_DIR) -lmlx -framework OpenGL -framework AppKit
+MLX_REPO     = https://github.com/42Paris/minilibx-macos.git
+else
+$(error Unsupported OS: $(UNAME_S))
+endif
 
 INCLUDES = -Iinclude -I$(MINILIBX_DIR)
-
-ifeq ($(UNAME_S), Linux)
-MLX_FLAGS = -L$(MINILIBX_DIR) -lmlx -lXext -lX11 -lm -lbsd
-else
-$(error This starter is configured for Linux only)
-endif
 
 SRCS = \
 	srcs/main.c \
@@ -37,7 +42,7 @@ $(MINILIBX):
 	@if [ ! -d "$(MINILIBX_DIR)" ]; then \
 		echo "MiniLibX not found, cloning into $(MINILIBX_DIR)"; \
 		mkdir -p lib; \
-		git clone https://github.com/42Paris/minilibx-linux.git $(MINILIBX_DIR); \
+		git clone $(MLX_REPO) $(MINILIBX_DIR); \
 	fi
 	$(MAKE) -C $(MINILIBX_DIR)
 
