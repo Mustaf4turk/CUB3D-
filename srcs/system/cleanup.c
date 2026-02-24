@@ -22,12 +22,8 @@ void	cleanup_game(t_game *game)
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
 	if (game->mlx)
-	{
-# ifdef __linux__
 		mlx_destroy_display(game->mlx);
-# endif
-		free(game->mlx);
-	}
+	free(game->mlx);
 	free_map(game->map.grid);
 	free(game->map.tex_no);
 	free(game->map.tex_so);

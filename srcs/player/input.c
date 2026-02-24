@@ -52,7 +52,7 @@ static int	on_key_release(int key, void *param)
 
 void	handle_input_setup(t_game *game)
 {
-	mlx_hook(game->win, 17, 0, on_destroy, game);
-	mlx_hook(game->win, 2, 1, on_key_press, game);
-	mlx_hook(game->win, 3, 2, on_key_release, game);
+	mlx_hook(game->win, DestroyNotify, NoEventMask, on_destroy, game);
+	mlx_hook(game->win, KeyPress, KeyPressMask, on_key_press, game);
+	mlx_hook(game->win, KeyRelease, KeyReleaseMask, on_key_release, game);
 }

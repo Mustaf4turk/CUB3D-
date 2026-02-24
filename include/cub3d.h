@@ -8,9 +8,7 @@
 # include <math.h>
 
 # include "mlx.h"
-# ifdef __linux__
-#  include <X11/X.h>
-# endif
+# include <X11/X.h>
 
 # include "types.h"
 # include "keycodes.h"
