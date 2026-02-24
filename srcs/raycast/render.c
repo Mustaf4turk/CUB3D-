@@ -23,7 +23,7 @@ static void	draw_column(t_game *game, int x, int start, int end)
 		put_pixel(game, x, y++, 0x2B2B2B);
 }
 
-static void	race_ray(t_game *g, int x)
+static void	trace_ray(t_game *g, int x)
 {
 	double	camera_x;
 	double	ray_dir_x;

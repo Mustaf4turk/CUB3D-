@@ -35,18 +35,18 @@ $(NAME): $(MINILIBX) $(OBJS)
 
 $(MINILIBX):
 	@if [ ! -d "$(MINILIBX_DIR)" ]; then \
-		echo "MiniLibX not found at $(MINILIBX_DIR)"; \
-		echo "Run: git clone https://github.com/42Paris/minilibx-linux.git lib/mlx_linux"; \
-		exit 1; \
+		echo "MiniLibX not found, cloning into $(MINILIBX_DIR)"; \
+		mkdir -p lib; \
+		git clone https://github.com/42Paris/minilibx-linux.git $(MINILIBX_DIR); \
 	fi
-	$(MAKE) -sC $(MINILIBX_DIR)
+	$(MAKE) -C $(MINILIBX_DIR)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
-	@if [ -d "$(MINILIBX_DIR)" ]; then $(MAKE) -sC $(MINILIBX_DIR) clean; fi
+	@if [ -d "$(MINILIBX_DIR)" ]; then $(MAKE) -C $(MINILIBX_DIR) clean; fi
 
 fclean: clean
 	rm -f $(NAME)

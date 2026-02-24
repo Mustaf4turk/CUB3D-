@@ -43,7 +43,7 @@ sudo apt update
 sudo apt install -y build-essential xorg libxext-dev libbsd-dev
 ```
 
-Clone MiniLibX Linux inside `lib/`:
+Clone MiniLibX Linux inside `lib/` (optional, `make` also auto-clones if missing):
 
 ```bash
 mkdir -p lib

@@ -1,13 +1,19 @@
 #include "cub3d.h"
 
-static int	on_destroy(t_game *game)
+static int	on_destroy(void *param)
 {
+	t_game	*game;
+
+	game = (t_game *)param;
 	cleanup_game(game);
 	exit(0);
 }
 
-static int	on_key_press(int key, t_game *game)
+static int	on_key_press(int key, void *param)
 {
+	t_game	*game;
+
+	game = (t_game *)param;
 	if (key == KEY_ESC)
 		return (on_destroy(game));
 	if (key == KEY_W)
@@ -25,8 +31,11 @@ static int	on_key_press(int key, t_game *game)
 	return (0);
 }
 
-static int	on_key_release(int key, t_game *game)
+static int	on_key_release(int key, void *param)
 {
+	t_game	*game;
+
+	game = (t_game *)param;
 	if (key == KEY_W && game->player.move_y == 1)
 		game->player.move_y = 0;
 	if (key == KEY_S && game->player.move_y == -1)
