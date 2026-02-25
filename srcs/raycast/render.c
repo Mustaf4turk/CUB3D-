@@ -48,8 +48,14 @@ static void	trace_ray(t_game *g, int x)
 	ray_dir_y = g->player.dir_y + g->player.plane_y * camera_x;
 	map_x = (int)g->player.x;
 	map_y = (int)g->player.y;
-	delta_x = (ray_dir_x == 0) ? 1e30 : fabs(1.0 / ray_dir_x);
-	delta_y = (ray_dir_y == 0) ? 1e30 : fabs(1.0 / ray_dir_y);
+	if (ray_dir_x == 0)
+		delta_x = 1e30;
+	else
+		delta_x = fabs(1.0 / ray_dir_x);
+	if (ray_dir_y == 0)
+		delta_y = 1e30;
+	else
+		delta_y = fabs(1.0 / ray_dir_y);
 	if (ray_dir_x < 0)
 	{
 		step_x = -1;
