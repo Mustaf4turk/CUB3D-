@@ -426,6 +426,9 @@ static int	build_map_grid(t_game *game, t_parse *p)
 	if (!game->map.grid)
 		return (1);
 	row = 0;
+	while (row <= game->map.height)
+		game->map.grid[row++] = NULL;
+	row = 0;
 	while (row < game->map.height)
 	{
 		game->map.grid[row] = malloc((size_t)game->map.width + 1);
@@ -522,6 +525,32 @@ static int	validate_closed_map(t_game *game)
 	return (0);
 }
 
+static int	check_tex_file(const char *path)
+{
+	int	fd;
+
+	if (!path)
+		return (1);
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		return (1);
+	close(fd);
+	return (0);
+}
+
+static int	check_tex_files(t_game *game)
+{
+	if (check_tex_file(game->map.tex_no) != 0)
+		return (1);
+	if (check_tex_file(game->map.tex_so) != 0)
+		return (1);
+	if (check_tex_file(game->map.tex_we) != 0)
+		return (1);
+	if (check_tex_file(game->map.tex_ea) != 0)
+		return (1);
+	return (0);
+}
+
 int	load_map_from_cub(t_game *game, const char *path)
 {
 	char	*all;
@@ -542,6 +571,8 @@ int	load_map_from_cub(t_game *game, const char *path)
 		|| build_map_grid(game, &p) == 1 || validate_char_and_spawn(game) == 1
 		|| validate_closed_map(game) == 1)
 		return (free_lines(p.lines), error_exit("Invalid .cub content"));
+	if (check_tex_files(game) == 1)
+		return (free_lines(p.lines), error_exit("Texture file not found"));
 	free_lines(p.lines);
 	return (0);
 }

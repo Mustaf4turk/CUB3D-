@@ -20,4 +20,9 @@
 # define MOVE_SPEED 0.06
 # define ROT_SPEED 0.045
 
+# define TEX_NO 0
+# define TEX_SO 1
+# define TEX_WE 2
+# define TEX_EA 3
+
 #endif

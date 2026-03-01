@@ -14,4 +14,6 @@ int		update_frame(t_game *game);
 
 void	render_frame(t_game *game);
 
+int		load_textures(t_game *game);
+
 #endif

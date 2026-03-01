@@ -10,6 +10,32 @@ typedef struct s_img
 	int		endian;
 }t_img;
 
+typedef struct s_tex
+{
+	void	*img;
+	int		*addr;
+	int		width;
+	int		height;
+	int		bpp;
+	int		line_len;
+	int		endian;
+}t_tex;
+
+typedef struct s_ray
+{
+	double	dir_x;
+	double	dir_y;
+	int		step_x;
+	int		step_y;
+	int		side;
+	double	perp_dist;
+	double	wall_x;
+	int		line_h;
+	int		draw_start;
+	int		draw_end;
+	int		tex_id;
+}t_ray;
+
 typedef struct s_player
 {
 	double	x;
@@ -46,6 +72,9 @@ typedef struct s_game
 	t_img		img;
 	t_map		map;
 	t_player	player;
+	t_tex		tex[4];
+	int			floor_color;
+	int			ceiling_color;
 }t_game;
 
 #endif

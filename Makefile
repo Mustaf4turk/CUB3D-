@@ -24,7 +24,8 @@ SRCS = \
 	srcs/map/parser.c \
 	srcs/player/input.c \
 	srcs/player/move.c \
-	srcs/raycast/render.c
+	srcs/raycast/render.c \
+	srcs/raycast/texture.c
 
 OBJS = $(SRCS:.c=.o)
 

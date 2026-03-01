@@ -17,13 +17,24 @@ static void	free_map(char **grid)
 
 void	cleanup_game(t_game *game)
 {
-	if (game->img.ptr)
-		mlx_destroy_image(game->mlx, game->img.ptr);
-	if (game->win)
-		mlx_destroy_window(game->mlx, game->win);
+	int	i;
+
 	if (game->mlx)
+	{
+		i = 0;
+		while (i < 4)
+		{
+			if (game->tex[i].img)
+				mlx_destroy_image(game->mlx, game->tex[i].img);
+			i++;
+		}
+		if (game->img.ptr)
+			mlx_destroy_image(game->mlx, game->img.ptr);
+		if (game->win)
+			mlx_destroy_window(game->mlx, game->win);
 		mlx_destroy_display(game->mlx);
-	free(game->mlx);
+		free(game->mlx);
+	}
 	free_map(game->map.grid);
 	free(game->map.tex_no);
 	free(game->map.tex_so);

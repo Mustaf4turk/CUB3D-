@@ -1,0 +1,27 @@
+#include "cub3d.h"
+
+static int	load_single_tex(t_game *game, t_tex *tex, char *path)
+{
+	tex->img = mlx_xpm_file_to_image(game->mlx, path,
+			&tex->width, &tex->height);
+	if (!tex->img)
+		return (1);
+	tex->addr = (int *)mlx_get_data_addr(tex->img,
+			&tex->bpp, &tex->line_len, &tex->endian);
+	if (!tex->addr)
+		return (1);
+	return (0);
+}
+
+int	load_textures(t_game *game)
+{
+	if (load_single_tex(game, &game->tex[TEX_NO], game->map.tex_no) != 0)
+		return (error_exit("Failed to load north texture"));
+	if (load_single_tex(game, &game->tex[TEX_SO], game->map.tex_so) != 0)
+		return (error_exit("Failed to load south texture"));
+	if (load_single_tex(game, &game->tex[TEX_WE], game->map.tex_we) != 0)
+		return (error_exit("Failed to load west texture"));
+	if (load_single_tex(game, &game->tex[TEX_EA], game->map.tex_ea) != 0)
+		return (error_exit("Failed to load east texture"));
+	return (0);
+}
