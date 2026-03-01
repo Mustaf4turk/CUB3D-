@@ -39,7 +39,8 @@ static void	draw_column(t_game *g, int x, t_ray *ray)
 			tex_y = 0;
 		if (tex_y >= tex->height)
 			tex_y = tex->height - 1;
-		put_pixel(g, x, y, tex->addr[tex_y * (tex->line_len / 4) + tex_x]);
+		put_pixel(g, x, y, 0xFF000000
+			| tex->addr[tex_y * (tex->line_len / 4) + tex_x]);
 		tex_pos += step;
 		y++;
 	}

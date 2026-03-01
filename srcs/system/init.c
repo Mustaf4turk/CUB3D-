@@ -57,9 +57,9 @@ int	init_game(t_game *game, const char *map_path)
 	if (load_map_from_cub(game, map_path) != 0)
 		return (cleanup_game(game), 1);
 	init_player(game);
-	game->floor_color = (game->map.floor_rgb[0] << 16)
+	game->floor_color = 0xFF000000 | (game->map.floor_rgb[0] << 16)
 		| (game->map.floor_rgb[1] << 8) | game->map.floor_rgb[2];
-	game->ceiling_color = (game->map.ceiling_rgb[0] << 16)
+	game->ceiling_color = 0xFF000000 | (game->map.ceiling_rgb[0] << 16)
 		| (game->map.ceiling_rgb[1] << 8) | game->map.ceiling_rgb[2];
 	game->mlx = mlx_init();
 	if (!game->mlx)
