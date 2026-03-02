@@ -3,21 +3,11 @@ NAME = cub3D
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -O2
 
-UNAME_S := $(shell uname -s)
-
-ifeq ($(UNAME_S), Darwin)
-	MINILIBX_DIR = lib/mlx_mac
-	MINILIBX = $(MINILIBX_DIR)/libmlx.a
-	INCLUDES = -Iinclude -I$(MINILIBX_DIR)
-	MLX_FLAGS = -L$(MINILIBX_DIR) -lmlx -framework OpenGL -framework AppKit -lm
-	MLX_REPO = https://github.com/dannywillems/minilibx-mac-osx.git
-else
-	MINILIBX_DIR = lib/mlx_linux
-	MINILIBX = $(MINILIBX_DIR)/libmlx.a
-	INCLUDES = -Iinclude -I$(MINILIBX_DIR)
-	MLX_FLAGS = -L$(MINILIBX_DIR) -lmlx -lXext -lX11 -lm
-	MLX_REPO = https://github.com/42Paris/minilibx-linux.git
-endif
+MINILIBX_DIR = lib/mlx_linux
+MINILIBX = $(MINILIBX_DIR)/libmlx.a
+INCLUDES = -Iinclude -I$(MINILIBX_DIR)
+MLX_FLAGS = -L$(MINILIBX_DIR) -lmlx -lXext -lX11 -lm
+MLX_REPO = https://github.com/42Paris/minilibx-linux.git
 
 SRCS = \
 	srcs/main.c \
@@ -25,6 +15,12 @@ SRCS = \
 	srcs/system/cleanup.c \
 	srcs/system/errors.c \
 	srcs/map/parser.c \
+	srcs/map/parser_utils.c \
+	srcs/map/parser_file.c \
+	srcs/map/parser_header.c \
+	srcs/map/parser_elements.c \
+	srcs/map/parser_map.c \
+	srcs/map/parser_validate.c \
 	srcs/player/input.c \
 	srcs/player/move.c \
 	srcs/raycast/render.c \
@@ -38,8 +34,9 @@ $(NAME): $(MINILIBX) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(MLX_FLAGS) -o $(NAME)
 
 $(MINILIBX):
-	@if [ ! -d "$(MINILIBX_DIR)" ]; then \
+	@if [ ! -f "$(MINILIBX_DIR)/Makefile" ]; then \
 		echo "MiniLibX not found, cloning into $(MINILIBX_DIR)"; \
+		rm -rf $(MINILIBX_DIR); \
 		mkdir -p lib; \
 		git clone $(MLX_REPO) $(MINILIBX_DIR); \
 	fi

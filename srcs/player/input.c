@@ -7,6 +7,7 @@ static int	on_destroy(void *param)
 	game = (t_game *)param;
 	cleanup_game(game);
 	exit(0);
+	return (0);
 }
 
 static int	on_key_press(int key, void *param)
