@@ -1,73 +1,107 @@
-# cub3d
+# cub3D
 
-Minimal, Linux-focused starter for 42 `cub3d`.
+42 okulunun cub3D projesi. Basit bir raycasting motoru kullanarak birinci şahıs 3D görünüm oluşturur. MiniLibX kütüphanesi ile pencere yönetimi ve grafik çizimi yapılır.
 
-This setup is intentionally simple:
-- No Makefile colors or decorative output
-- Clear module split similar to common cub3d projects
-- Basic raycasting + movement loop to start fast
+## Ne yapıyor?
 
-## Project layout
+`.cub` uzantılı bir harita dosyası alıyor, içindeki duvar texture yollarını, zemin/tavan renklerini ve harita verisini parse edip ekrana 3D olarak yansıtıyor. Oyuncu WASD ile hareket eder, ok tuşlarıyla etrafına bakar.
 
-```
-.
-├── include/
-│   ├── cub3d.h
-│   ├── functions.h
-│   ├── keycodes.h
-│   └── types.h
-├── maps/
-│   └── demo.cub
-├── srcs/
-│   ├── main.c
-│   ├── map/
-│   │   └── parser.c
-│   ├── player/
-│   │   ├── input.c
-│   │   └── move.c
-│   ├── raycast/
-│   │   └── render.c
-│   └── system/
-│       ├── cleanup.c
-│       ├── errors.c
-│       └── init.c
-└── Makefile
-```
+## Gereksinimler
 
-## Linux requirements
-
-Install dependencies:
+Linux üzerinde çalışır. Şu paketlerin kurulu olması gerekiyor:
 
 ```bash
 sudo apt update
 sudo apt install -y build-essential xorg libxext-dev libbsd-dev
 ```
 
-Clone MiniLibX Linux inside `lib/` (optional, `make` also auto-clones if missing):
+MiniLibX `lib/mlx_linux` altında olmalı. Yoksa `make` otomatik çeker:
 
 ```bash
 mkdir -p lib
 git clone https://github.com/42Paris/minilibx-linux.git lib/mlx_linux
 ```
 
-## Build and run
+## Derleme ve çalıştırma
 
 ```bash
 make
 ./cub3D maps/demo.cub
 ```
 
-## Current state
+Farklı bir harita denemek için:
 
-- Window + image rendering loop
-- Basic WASD movement and arrow rotation
-- Basic DDA raycasting with flat wall colors
-- Real `.cub` parser for `NO/SO/WE/EA/F/C` + map section
-- Map validation: one player spawn, allowed chars, map closure check
+```bash
+./cub3D maps/maze.cub
+```
 
-## Next mandatory steps
+## Kontroller
 
-1. Add texture file validation (`.xpm` exists and readable)
-2. Add textured wall rendering using parsed `NO/SO/WE/EA` paths
-3. Tighten error handling + full free on all failure paths
-4. Add more valid/invalid map test cases
+| Tuş | İşlev |
+|-----|-------|
+| W | İleri |
+| S | Geri |
+| A | Sola kayma |
+| D | Sağa kayma |
+| ← | Sola dönme |
+| → | Sağa dönme |
+| ESC | Çıkış |
+
+## Harita formatı (.cub)
+
+```
+NO ./textures/north.xpm
+SO ./textures/south.xpm
+WE ./textures/west.xpm
+EA ./textures/east.xpm
+F 60,60,60
+C 30,60,90
+
+111111111111
+100000000001
+101111011101
+1000N0010001
+101011010101
+100000000001
+111111111111
+```
+
+- `NO/SO/WE/EA`: Duvar texture dosya yolları (.xpm)
+- `F`: Zemin rengi (R,G,B — 0-255 arası)
+- `C`: Tavan rengi (R,G,B — 0-255 arası)
+- `1`: Duvar, `0`: Boş alan, `N/S/E/W`: Oyuncu başlangıç pozisyonu ve yönü
+- Harita tamamen duvarlarla çevrili olmalı
+
+## Proje yapısı
+
+```
+srcs/
+├── main.c                 # Giriş noktası, mlx loop başlatma
+├── map/
+│   ├── parser.c           # .cub dosyası okuma ve kontrol
+│   ├── parser_file.c      # Dosya okuma, satır ayırma
+│   ├── parser_header.c    # NO/SO/WE/EA/F/C parse etme
+│   ├── parser_elements.c  # Harita satırı tanıma, ön kontrol
+│   ├── parser_map.c       # Grid oluşturma, spawn bulma
+│   ├── parser_validate.c  # Flood fill ile harita kapalılık kontrolü
+│   └── parser_utils.c     # Yardımcı fonksiyonlar
+├── player/
+│   ├── input.c            # Tuş basma/bırakma olayları
+│   └── move.c             # Hareket ve çarpışma kontrolü
+├── raycast/
+│   ├── render.c           # DDA raycasting ve çizim
+│   └── texture.c          # XPM texture yükleme
+└── system/
+    ├── init.c             # Oyun yapısı ve MLX başlatma
+    ├── cleanup.c          # Bellek temizleme
+    └── errors.c           # Hata mesajı yazdırma
+```
+
+## Özellikler
+
+- DDA tabanlı raycasting ile texture'lı duvar render'ı
+- WASD hareket + ok tuşu ile kamera dönüşü
+- Bounding box tabanlı çarpışma kontrolü (duvar içine girme engeli)
+- Tam `.cub` parser: header, RGB, harita validasyonu
+- Flood fill ile haritanın duvarlarla kapalı olup olmadığının kontrolü
+- Hatalı dosya uzantısı ve geçersiz renk değeri (overflow) kontrolü
