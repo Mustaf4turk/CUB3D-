@@ -58,8 +58,10 @@ static void	rotate_player(t_game *game)
 		return ;
 	a = ROT_SPEED * game->player.rot;
 	old_dir_x = game->player.dir_x;
-	game->player.dir_x = game->player.dir_x * cos(a) - game->player.dir_y * sin(a);
-	game->player.dir_y = old_dir_x * sin(a) + game->player.dir_y * cos(a);
+	game->player.dir_x = game->player.dir_x * cos(a)
+		- game->player.dir_y * sin(a);
+	game->player.dir_y = old_dir_x * sin(a)
+		+ game->player.dir_y * cos(a);
 	old_plane_x = game->player.plane_x;
 	game->player.plane_x = game->player.plane_x * cos(a)
 		- game->player.plane_y * sin(a);

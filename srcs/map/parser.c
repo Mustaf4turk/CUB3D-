@@ -42,15 +42,18 @@ int	load_map_from_cub(t_game *game, const char *path)
 	if (!p.lines)
 		return (error_exit("Memory allocation failed"));
 	if (p_preparse_lines(game, &p) == 1)
-		return (p_free_lines(p.lines), error_exit("Invalid header or map data"));
+		return (p_free_lines(p.lines),
+			error_exit("Invalid header or map data"));
 	if (p_find_map_bounds(&p) == 1)
 		return (p_free_lines(p.lines), error_exit("Map not found in file"));
 	if (p_build_map_grid(game, &p) == 1)
 		return (p_free_lines(p.lines), error_exit("Failed to build map grid"));
 	if (p_validate_char_and_spawn(game) == 1)
-		return (p_free_lines(p.lines), error_exit("Invalid char or missing spawn"));
+		return (p_free_lines(p.lines),
+			error_exit("Invalid char or spawn"));
 	if (p_validate_closed_map(game) == 1)
-		return (p_free_lines(p.lines), error_exit("Map is not closed by walls"));
+		return (p_free_lines(p.lines),
+			error_exit("Map is not closed by walls"));
 	if (p_check_tex_files(game) == 1)
 		return (p_free_lines(p.lines), error_exit("Invalid texture file path"));
 	p_free_lines(p.lines);
