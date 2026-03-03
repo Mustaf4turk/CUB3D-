@@ -12,18 +12,22 @@ MLX_REPO = https://github.com/42Paris/minilibx-linux.git
 SRCS = \
 	srcs/main.c \
 	srcs/system/init.c \
+	srcs/system/init_player.c \
 	srcs/system/cleanup.c \
 	srcs/system/errors.c \
 	srcs/map/parser.c \
 	srcs/map/parser_utils.c \
 	srcs/map/parser_file.c \
+	srcs/map/parser_lines.c \
 	srcs/map/parser_header.c \
 	srcs/map/parser_elements.c \
 	srcs/map/parser_map.c \
 	srcs/map/parser_validate.c \
+	srcs/map/parser_tex.c \
 	srcs/player/input.c \
 	srcs/player/move.c \
 	srcs/raycast/render.c \
+	srcs/raycast/render_dda.c \
 	srcs/raycast/texture.c
 
 OBJS = $(SRCS:.c=.o)

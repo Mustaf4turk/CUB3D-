@@ -18,11 +18,32 @@ static int	max_map_width(t_parse *p)
 	return (max);
 }
 
+static void	fill_row(t_game *game, t_parse *p, int row)
+{
+	int		col;
+	int		line_len;
+	char	*src;
+
+	col = 0;
+	while (col < game->map.width)
+		game->map.grid[row][col++] = ' ';
+	game->map.grid[row][col] = '\0';
+	src = p->lines[p->map_start + row];
+	line_len = (int)p_strlen(src);
+	col = 0;
+	while (col < line_len)
+	{
+		if (src[col] == '\t')
+			game->map.grid[row][col] = ' ';
+		else
+			game->map.grid[row][col] = src[col];
+		col++;
+	}
+}
+
 int	p_build_map_grid(t_game *game, t_parse *p)
 {
 	int	row;
-	int	col;
-	int	line_len;
 
 	game->map.height = p->map_end - p->map_start + 1;
 	game->map.width = max_map_width(p);
@@ -38,20 +59,7 @@ int	p_build_map_grid(t_game *game, t_parse *p)
 		game->map.grid[row] = malloc((size_t)game->map.width + 1);
 		if (!game->map.grid[row])
 			return (1);
-		col = 0;
-		while (col < game->map.width)
-			game->map.grid[row][col++] = ' ';
-		game->map.grid[row][col] = '\0';
-		line_len = (int)p_strlen(p->lines[p->map_start + row]);
-		col = 0;
-		while (col < line_len)
-		{
-			if (p->lines[p->map_start + row][col] == '\t')
-				game->map.grid[row][col] = ' ';
-			else
-				game->map.grid[row][col] = p->lines[p->map_start + row][col];
-			col++;
-		}
+		fill_row(game, p, row);
 		row++;
 	}
 	game->map.grid[row] = NULL;

@@ -9,7 +9,21 @@ typedef struct s_parse
 	int		count;
 	int		map_start;
 	int		map_end;
-}t_parse;
+}				t_parse;
+
+typedef struct s_buf
+{
+	char	*data;
+	size_t	cap;
+	size_t	len;
+}				t_buf;
+
+typedef struct s_flood
+{
+	char	**grid;
+	int		h;
+	int		w;
+}				t_flood;
 
 /* parser_utils.c */
 size_t	p_strlen(const char *s);

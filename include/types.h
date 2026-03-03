@@ -8,7 +8,7 @@ typedef struct s_img
 	int		bpp;
 	int		line_len;
 	int		endian;
-}t_img;
+}				t_img;
 
 typedef struct s_tex
 {
@@ -19,7 +19,7 @@ typedef struct s_tex
 	int		bpp;
 	int		line_len;
 	int		endian;
-}t_tex;
+}				t_tex;
 
 typedef struct s_ray
 {
@@ -34,7 +34,18 @@ typedef struct s_ray
 	int		draw_start;
 	int		draw_end;
 	int		tex_id;
-}t_ray;
+}				t_ray;
+
+typedef struct s_dda
+{
+	int		map_x;
+	int		map_y;
+	double	delta_x;
+	double	delta_y;
+	double	side_x;
+	double	side_y;
+	int		hit;
+}				t_dda;
 
 typedef struct s_player
 {
@@ -47,7 +58,7 @@ typedef struct s_player
 	int		move_x;
 	int		move_y;
 	int		rot;
-}t_player;
+}				t_player;
 
 typedef struct s_map
 {
@@ -63,7 +74,7 @@ typedef struct s_map
 	double	spawn_x;
 	double	spawn_y;
 	char	spawn_dir;
-}t_map;
+}				t_map;
 
 typedef struct s_game
 {
@@ -75,6 +86,6 @@ typedef struct s_game
 	t_tex		tex[4];
 	int			floor_color;
 	int			ceiling_color;
-}t_game;
+}				t_game;
 
 #endif

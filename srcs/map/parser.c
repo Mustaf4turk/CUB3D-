@@ -1,5 +1,27 @@
 #include "parser_internal.h"
 
+int	p_find_map_bounds(t_parse *p)
+{
+	int	i;
+
+	p->map_start = -1;
+	p->map_end = -1;
+	i = 0;
+	while (i < p->count)
+	{
+		if (p_is_map_line(p->lines[i]))
+		{
+			if (p->map_start < 0)
+				p->map_start = i;
+			p->map_end = i;
+		}
+		i++;
+	}
+	if (p->map_start < 0)
+		return (1);
+	return (0);
+}
+
 static int	is_cub_path(const char *path)
 {
 	size_t	len;

@@ -16,48 +16,37 @@ static int	starts_with_token(const char *line, const char *token)
 	return (1);
 }
 
-static char	*extract_value_after_key(const char *line, int key_len)
+static int	parse_one_component(const char *line, int *i, int *value)
 {
-	int	start;
-	int	end;
-
-	start = key_len;
-	while (line[start] && p_is_space(line[start]))
-		start++;
-	end = (int)p_strlen(line);
-	while (end > start && p_is_space(line[end - 1]))
-		end--;
-	if (end <= start)
-		return (NULL);
-	return (p_dup_range(line, start, end));
+	while (line[*i] && p_is_space(line[*i]))
+		(*i)++;
+	if (!p_is_digit(line[*i]))
+		return (1);
+	*value = 0;
+	while (p_is_digit(line[*i]))
+	{
+		*value = *value * 10 + (line[(*i)++] - '0');
+		if (*value > 255)
+			return (1);
+	}
+	while (line[*i] && p_is_space(line[*i]))
+		(*i)++;
+	return (0);
 }
 
 static int	parse_rgb_value(const char *line, int rgb[3])
 {
 	int	i;
 	int	j;
-	long	value;
+	int	value;
 
 	i = 0;
 	j = 0;
 	while (j < 3)
 	{
-		while (line[i] && p_is_space(line[i]))
-			i++;
-		if (!p_is_digit(line[i]))
-			return (1);
-		value = 0;
-		while (p_is_digit(line[i]))
-		{
-			value = value * 10 + (line[i++] - '0');
-			if (value > 255)
-				return (1);
-		}
-		if (value < 0 || value > 255)
+		if (parse_one_component(line, &i, &value) != 0)
 			return (1);
 		rgb[j++] = value;
-		while (line[i] && p_is_space(line[i]))
-			i++;
 		if (j < 3)
 		{
 			if (line[i] != ',')
@@ -77,10 +66,20 @@ static int	parse_rgb_value(const char *line, int rgb[3])
 static int	set_header_value(char **dst, const char *line, int key_len)
 {
 	char	*value;
+	int		start;
+	int		end;
 
 	if (*dst)
 		return (1);
-	value = extract_value_after_key(line, key_len);
+	start = key_len;
+	while (line[start] && p_is_space(line[start]))
+		start++;
+	end = (int)p_strlen(line);
+	while (end > start && p_is_space(line[end - 1]))
+		end--;
+	if (end <= start)
+		return (1);
+	value = p_dup_range(line, start, end);
 	if (!value)
 		return (1);
 	*dst = value;

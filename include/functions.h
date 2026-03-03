@@ -4,6 +4,7 @@
 # include "types.h"
 
 int		init_game(t_game *game, const char *map_path);
+void	init_player(t_game *game);
 void	cleanup_game(t_game *game);
 int		error_exit(const char *msg);
 
@@ -13,6 +14,9 @@ void	handle_input_setup(t_game *game);
 int		update_frame(t_game *game);
 
 void	render_frame(t_game *game);
+void	draw_column(t_game *g, int x, t_ray *ray);
+void	calc_tex_info(t_ray *ray, t_game *g);
+void	trace_ray(t_game *g, int x);
 
 int		load_textures(t_game *game);
 
