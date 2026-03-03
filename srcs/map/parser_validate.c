@@ -1,5 +1,22 @@
 #include "parser_internal.h"
 
+typedef struct s_flood
+{
+	char	**grid;
+	int		h;
+	int		w;
+}				t_flood;
+
+static void	free_grid(char **grid, int h)
+{
+	int	y;
+
+	y = 0;
+	while (y < h)
+		free(grid[y++]);
+	free(grid);
+}
+
 static char	**dup_grid(t_game *game)
 {
 	char	**copy;
@@ -28,52 +45,50 @@ static char	**dup_grid(t_game *game)
 	return (copy);
 }
 
-static int	flood_fill(char **grid, int h, int w, int y, int x)
+static int	flood_fill(t_flood *f, int y, int x)
 {
-	if (y < 0 || y >= h || x < 0 || x >= w)
+	if (y < 0 || y >= f->h || x < 0 || x >= f->w)
 		return (1);
-	if (grid[y][x] == ' ')
+	if (f->grid[y][x] == ' ')
 		return (1);
-	if (grid[y][x] == '1' || grid[y][x] == 'F')
+	if (f->grid[y][x] == '1' || f->grid[y][x] == 'F')
 		return (0);
-	grid[y][x] = 'F';
-	if (flood_fill(grid, h, w, y - 1, x) == 1)
+	f->grid[y][x] = 'F';
+	if (flood_fill(f, y - 1, x) == 1)
 		return (1);
-	if (flood_fill(grid, h, w, y + 1, x) == 1)
+	if (flood_fill(f, y + 1, x) == 1)
 		return (1);
-	if (flood_fill(grid, h, w, y, x - 1) == 1)
+	if (flood_fill(f, y, x - 1) == 1)
 		return (1);
-	if (flood_fill(grid, h, w, y, x + 1) == 1)
+	if (flood_fill(f, y, x + 1) == 1)
 		return (1);
 	return (0);
 }
 
 int	p_validate_closed_map(t_game *game)
 {
-	char	**copy;
+	t_flood	f;
 	int		y;
 	int		x;
 	int		ret;
 
-	copy = dup_grid(game);
-	if (!copy)
+	f.grid = dup_grid(game);
+	if (!f.grid)
 		return (1);
+	f.h = game->map.height;
+	f.w = game->map.width;
 	ret = 0;
 	y = -1;
-	while (++y < game->map.height && ret == 0)
+	while (++y < f.h && ret == 0)
 	{
 		x = -1;
-		while (++x < game->map.width && ret == 0)
+		while (++x < f.w && ret == 0)
 		{
-			if (copy[y][x] == '0')
-				ret = flood_fill(copy, game->map.height,
-						game->map.width, y, x);
+			if (f.grid[y][x] == '0')
+				ret = flood_fill(&f, y, x);
 		}
 	}
-	y = 0;
-	while (y < game->map.height)
-		free(copy[y++]);
-	free(copy);
+	free_grid(f.grid, f.h);
 	return (ret);
 }
 

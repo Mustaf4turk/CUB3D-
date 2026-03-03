@@ -35,6 +35,27 @@ int	p_headers_complete(t_game *game)
 	return (1);
 }
 
+static int	handle_line(t_game *game, const char *line,
+		int *map_started, int *blank_after)
+{
+	if (!*map_started && p_is_blank_line(line))
+		return (0);
+	if (!*map_started && p_is_map_line(line))
+	{
+		*map_started = 1;
+		return (0);
+	}
+	if (!*map_started)
+		return (p_parse_header_line(game, line));
+	if (!p_is_blank_line(line) && !p_is_map_line(line))
+		return (1);
+	if (p_is_blank_line(line))
+		*blank_after = 1;
+	else if (*blank_after)
+		return (1);
+	return (0);
+}
+
 int	p_preparse_lines(t_game *game, t_parse *p)
 {
 	int	i;
@@ -46,26 +67,9 @@ int	p_preparse_lines(t_game *game, t_parse *p)
 	blank_after_map = 0;
 	while (i < p->count)
 	{
-		if (!map_started && p_is_blank_line(p->lines[i]))
-		{
-			i++;
-			continue ;
-		}
-		else if (!map_started && p_is_map_line(p->lines[i]))
-			map_started = 1;
-		else if (!map_started
-			&& p_parse_header_line(game, p->lines[i]) == 1)
+		if (handle_line(game, p->lines[i],
+				&map_started, &blank_after_map) == 1)
 			return (1);
-		if (map_started)
-		{
-			if (!p_is_blank_line(p->lines[i])
-				&& !p_is_map_line(p->lines[i]))
-				return (1);
-			if (p_is_blank_line(p->lines[i]))
-				blank_after_map = 1;
-			else if (blank_after_map)
-				return (1);
-		}
 		i++;
 	}
 	if (!p_headers_complete(game) || !map_started)
