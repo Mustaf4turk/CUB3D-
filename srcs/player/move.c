@@ -12,6 +12,19 @@ static int	is_walkable(t_game *game, double x, double y)
 	return (game->map.grid[my][mx] != '1');
 }
 
+static int	can_move_to(t_game *game, double x, double y)
+{
+	if (!is_walkable(game, x - COL_MARGIN, y - COL_MARGIN))
+		return (0);
+	if (!is_walkable(game, x + COL_MARGIN, y - COL_MARGIN))
+		return (0);
+	if (!is_walkable(game, x - COL_MARGIN, y + COL_MARGIN))
+		return (0);
+	if (!is_walkable(game, x + COL_MARGIN, y + COL_MARGIN))
+		return (0);
+	return (1);
+}
+
 static void	move_player(t_game *game)
 {
 	double	nx;
@@ -29,9 +42,9 @@ static void	move_player(t_game *game)
 		nx += game->player.plane_x * MOVE_SPEED * game->player.move_x;
 		ny += game->player.plane_y * MOVE_SPEED * game->player.move_x;
 	}
-	if (is_walkable(game, nx, game->player.y))
+	if (can_move_to(game, nx, game->player.y))
 		game->player.x = nx;
-	if (is_walkable(game, game->player.x, ny))
+	if (can_move_to(game, game->player.x, ny))
 		game->player.y = ny;
 }
 

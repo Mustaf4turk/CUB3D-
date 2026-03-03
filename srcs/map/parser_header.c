@@ -36,7 +36,7 @@ static int	parse_rgb_value(const char *line, int rgb[3])
 {
 	int	i;
 	int	j;
-	int	value;
+	long	value;
 
 	i = 0;
 	j = 0;

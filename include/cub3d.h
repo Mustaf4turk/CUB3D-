@@ -19,6 +19,7 @@
 
 # define MOVE_SPEED 0.06
 # define ROT_SPEED 0.045
+# define COL_MARGIN 0.2
 
 # define TEX_NO 0
 # define TEX_SO 1

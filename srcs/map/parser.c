@@ -3,12 +3,24 @@
 static int	is_cub_path(const char *path)
 {
 	size_t	len;
+	size_t	i;
+	size_t	base_start;
 
 	len = p_strlen(path);
-	if (len < 4)
+	if (len < 5)
 		return (0);
 	if (path[len - 4] != '.' || path[len - 3] != 'c'
 		|| path[len - 2] != 'u' || path[len - 1] != 'b')
+		return (0);
+	base_start = 0;
+	i = 0;
+	while (i < len)
+	{
+		if (path[i] == '/')
+			base_start = i + 1;
+		i++;
+	}
+	if (len - base_start <= 4)
 		return (0);
 	return (1);
 }
