@@ -17,8 +17,8 @@
 # define WIN_W 1024
 # define WIN_H 720
 
-# define MOVE_SPEED 0.06
-# define ROT_SPEED 0.045
+# define MOVE_SPEED 0.03
+# define ROT_SPEED 0.010
 # define COL_MARGIN 0.2
 
 # define TEX_NO 0
