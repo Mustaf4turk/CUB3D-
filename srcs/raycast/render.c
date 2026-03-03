@@ -40,7 +40,8 @@ static void	draw_wall_strip(t_game *g, int x, t_ray *ray)
 	while (y <= ray->draw_end)
 	{
 		put_pixel(g, x, y, 0xFF000000
-			| tex->addr[(int)tex_pos * (tex->line_len / 4) + tex_x]);
+			| tex->addr[(int)fmin(tex_pos, (double)(tex->height - 1))
+			* (tex->line_len / 4) + tex_x]);
 		tex_pos += step;
 		y++;
 	}

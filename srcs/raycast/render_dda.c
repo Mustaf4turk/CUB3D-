@@ -1,5 +1,23 @@
 #include "cub3d.h"
 
+static void	init_steps(t_game *g, t_ray *ray, t_dda *dda)
+{
+	ray->step_x = 1;
+	dda->side_x = (dda->map_x + 1.0 - g->player.x) * dda->delta_x;
+	if (ray->dir_x < 0)
+	{
+		ray->step_x = -1;
+		dda->side_x = (g->player.x - dda->map_x) * dda->delta_x;
+	}
+	ray->step_y = 1;
+	dda->side_y = (dda->map_y + 1.0 - g->player.y) * dda->delta_y;
+	if (ray->dir_y < 0)
+	{
+		ray->step_y = -1;
+		dda->side_y = (g->player.y - dda->map_y) * dda->delta_y;
+	}
+}
+
 static void	init_ray(t_game *g, int x, t_ray *ray, t_dda *dda)
 {
 	double	camera_x;
@@ -9,18 +27,13 @@ static void	init_ray(t_game *g, int x, t_ray *ray, t_dda *dda)
 	ray->dir_y = g->player.dir_y + g->player.plane_y * camera_x;
 	dda->map_x = (int)g->player.x;
 	dda->map_y = (int)g->player.y;
-	dda->delta_x = (ray->dir_x == 0) ? 1e30 : fabs(1.0 / ray->dir_x);
-	dda->delta_y = (ray->dir_y == 0) ? 1e30 : fabs(1.0 / ray->dir_y);
-	ray->step_x = (ray->dir_x < 0) ? -1 : 1;
-	if (ray->dir_x < 0)
-		dda->side_x = (g->player.x - dda->map_x) * dda->delta_x;
-	else
-		dda->side_x = (dda->map_x + 1.0 - g->player.x) * dda->delta_x;
-	ray->step_y = (ray->dir_y < 0) ? -1 : 1;
-	if (ray->dir_y < 0)
-		dda->side_y = (g->player.y - dda->map_y) * dda->delta_y;
-	else
-		dda->side_y = (dda->map_y + 1.0 - g->player.y) * dda->delta_y;
+	dda->delta_x = 1e30;
+	if (ray->dir_x != 0)
+		dda->delta_x = fabs(1.0 / ray->dir_x);
+	dda->delta_y = 1e30;
+	if (ray->dir_y != 0)
+		dda->delta_y = fabs(1.0 / ray->dir_y);
+	init_steps(g, ray, dda);
 }
 
 static void	run_dda(t_game *g, t_ray *ray, t_dda *dda)
