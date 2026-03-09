@@ -44,12 +44,34 @@ static int	append_chunk(t_buf *buf, const char *chunk, size_t chunk_len)
 	return (0);
 }
 
+static char	*read_loop(int fd, t_buf *buf)
+{
+	ssize_t	rd;
+	char	chunk[1024];
+
+	rd = read(fd, chunk, sizeof(chunk));
+	while (rd > 0)
+	{
+		if (append_chunk(buf, chunk, (size_t)rd) == 1)
+		{
+			free(buf->data);
+			return (NULL);
+		}
+		rd = read(fd, chunk, sizeof(chunk));
+	}
+	if (rd < 0)
+	{
+		free(buf->data);
+		return (NULL);
+	}
+	return (buf->data);
+}
+
 char	*p_read_all_file(const char *path)
 {
 	int		fd;
-	ssize_t	rd;
-	char	chunk[1024];
 	t_buf	buf;
+	char	*result;
 
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
@@ -58,17 +80,12 @@ char	*p_read_all_file(const char *path)
 	buf.len = 0;
 	buf.data = malloc(buf.cap);
 	if (!buf.data)
-		return (close(fd), NULL);
-	buf.data[0] = '\0';
-	rd = read(fd, chunk, sizeof(chunk));
-	while (rd > 0)
 	{
-		if (append_chunk(&buf, chunk, (size_t)rd) == 1)
-			return (close(fd), free(buf.data), NULL);
-		rd = read(fd, chunk, sizeof(chunk));
+		close(fd);
+		return (NULL);
 	}
+	buf.data[0] = '\0';
+	result = read_loop(fd, &buf);
 	close(fd);
-	if (rd < 0)
-		return (free(buf.data), NULL);
-	return (buf.data);
+	return (result);
 }
