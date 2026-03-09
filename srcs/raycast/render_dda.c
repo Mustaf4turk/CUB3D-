@@ -78,27 +78,6 @@ static void	calc_ray_dist(t_ray *ray, t_dda *dda)
 		ray->draw_end = WIN_H - 1;
 }
 
-static void	calc_wall_tex(t_game *g, t_ray *ray)
-{
-	if (ray->side == 0)
-	{
-		ray->wall_x = g->player.y + ray->perp_dist * ray->dir_y;
-		if (ray->step_x < 0)
-			ray->tex_id = TEX_EA;
-		else
-			ray->tex_id = TEX_WE;
-	}
-	else
-	{
-		ray->wall_x = g->player.x + ray->perp_dist * ray->dir_x;
-		if (ray->step_y < 0)
-			ray->tex_id = TEX_NO;
-		else
-			ray->tex_id = TEX_SO;
-	}
-	ray->wall_x -= floor(ray->wall_x);
-}
-
 void	trace_ray(t_game *g, int x)
 {
 	t_ray	ray;

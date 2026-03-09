@@ -15,7 +15,7 @@ int		update_frame(t_game *game);
 
 void	render_frame(t_game *game);
 void	draw_column(t_game *g, int x, t_ray *ray);
-void	calc_tex_info(t_ray *ray, t_game *g);
+void	calc_wall_tex(t_game *g, t_ray *ray);
 void	trace_ray(t_game *g, int x);
 
 int		load_textures(t_game *game);
