@@ -74,5 +74,7 @@ int	p_preparse_lines(t_game *game, t_parse *p)
 	}
 	if (!p_headers_complete(game) || !map_started)
 		return (1);
+	if (blank_after_map)
+		return (1);
 	return (0);
 }
